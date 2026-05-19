@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import type { SurahMaster } from '../../types';
@@ -284,3 +284,4 @@ export default function SurahManagement() {
         </div>
     );
 }
+

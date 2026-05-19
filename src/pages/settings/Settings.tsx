@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import type { SettingsLembaga } from '../../types';
@@ -401,3 +401,4 @@ export default function Settings() {
         </div>
     );
 }
+

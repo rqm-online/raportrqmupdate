@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+﻿import { useState, useRef } from 'react';
 import { Settings, X, Upload, Save, Palette, FileText, Image as ImageIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -377,3 +377,4 @@ export function PrintSettings({
         </div>
     );
 }
+

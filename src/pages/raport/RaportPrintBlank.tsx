@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import type { SettingsLembaga } from '../../types';
@@ -272,3 +272,4 @@ export default function RaportPrintBlank() {
         </div>
     );
 }
+

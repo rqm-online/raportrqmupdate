@@ -1,4 +1,4 @@
-import type { ReportCard, SettingsLembaga, User, TahsinMaster, Student, Semester, AcademicYear, TahfidzProgress } from '../../types';
+﻿import type { ReportCard, SettingsLembaga, User, TahsinMaster, Student, Semester, AcademicYear, TahfidzProgress } from '../../types';
 import { formatScore, getPredikat, getMotivationalMessage, getCategoryNote } from '../../utils/grading';
 
 interface RaportTemplateProps {

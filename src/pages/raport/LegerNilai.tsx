@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+﻿import { useState, useMemo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { Card, CardContent } from '../../components/ui/card';
@@ -360,3 +360,4 @@ export default function LegerNilai() {
         </div>
     );
 }
+

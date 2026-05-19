@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
-import { createClient } from '@supabase/supabase-js';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
@@ -10,19 +9,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '../../components/ui/dialog';
 import { Pencil, Plus, Loader2 } from 'lucide-react';
 import type { User } from '../../types';
-
-// Create a temporary Supabase client for user creation (to avoid logging out current admin)
-const tempSupabase = createClient(
-    import.meta.env.VITE_SUPABASE_URL,
-    import.meta.env.VITE_SUPABASE_ANON_KEY,
-    {
-        auth: {
-            persistSession: false,
-            autoRefreshToken: false,
-            detectSessionInUrl: false
-        }
-    }
-);
 
 export default function TeacherManagement() {
     const queryClient = useQueryClient();
@@ -91,70 +77,32 @@ export default function TeacherManagement() {
         updateMutation.mutate(formData);
     };
 
-    // Handle Add User
+    // Handle Add User - bypass auth and save directly to public.users
     const handleAddUser = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsAdding(true);
-
         try {
-            // Sign up the new user using the module-level tempSupabase client
-            const { data: authData, error: authError } = await tempSupabase.auth.signUp({
+            // Cek email duplikat
+            const existing = teachers?.find(t => t.email === addFormData.email);
+            if (existing) throw new Error('Email sudah terdaftar. Silakan gunakan email lain.');
+
+            // Bypass mode: insert directly into public.users with generated UUID
+            const newId = crypto.randomUUID();
+            const { error } = await supabase.from('users').insert([{
+                id: newId,
                 email: addFormData.email,
-                password: addFormData.password,
-            });
-
-            if (authError) {
-                console.error("Signup Error:", authError);
-                if (authError.status === 422 || authError.message.includes('already registered')) {
-                    throw new Error('Email sudah terdaftar. Silakan gunakan email lain.');
-                }
-                throw authError;
-            }
-
-            if (!authData.user) throw new Error('Gagal membuat user (No data returned)');
-
-            // 3. Update the user details in public.users (created by trigger)
-            // Retry loop to ensure trigger has finished creating the row
-            let userCreated = false;
-            for (let i = 0; i < 5; i++) {
-                // Wait 1s
-                await new Promise(r => setTimeout(r, 1000));
-
-                // Try to update
-                const { data, error: updateError } = await supabase
-                    .from('users')
-                    .update({
-                        full_name: addFormData.full_name,
-                        role: addFormData.role
-                    })
-                    .eq('id', authData.user.id)
-                    .select(); // Select to check if row was returned
-
-                if (updateError) {
-                    console.error("Update Error (Attempt " + (i + 1) + "):", updateError);
-                    // If error is about missing column, we should warn user
-                    if (updateError.message.includes('column "full_name" does not exist')) {
-                        throw new Error('Database schema belum update. Mohon jalankan migration 007.');
-                    }
-                }
-
-                if (!updateError && data && data.length > 0) {
-                    userCreated = true;
-                    break;
-                }
-            }
-
-            if (!userCreated) {
-                throw new Error('Timeout: Gagal mengupdate data profil guru. Pastikan trigger database berjalan dan schema sudah update.');
-            }
+                full_name: addFormData.full_name,
+                role: addFormData.role,
+                signature_url: ''
+            }]);
+            
+            if (error) throw error;
 
             alert('Guru berhasil ditambahkan!');
             setAddFormData({ email: '', password: '', full_name: '', role: 'guru' });
             setIsAddOpen(false);
             queryClient.invalidateQueries({ queryKey: ['teachers_list'] });
-
         } catch (error: any) {
-            console.error("Full Error:", error);
             alert('Gagal menambah guru: ' + error.message);
         } finally {
             setIsAdding(false);
@@ -333,3 +281,4 @@ export default function TeacherManagement() {
         </div>
     );
 }
+

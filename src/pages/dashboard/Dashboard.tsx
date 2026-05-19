@@ -54,6 +54,10 @@ export default function Dashboard() {
         queryKey: ['user_role', session?.user?.id],
         enabled: !!session?.user?.id,
         queryFn: async () => {
+            // Bypass mode: return admin role directly
+            if (session?.user?.id === 'bypass-admin-local') {
+                return 'admin' as const;
+            }
             const { data } = await supabase
                 .from('users')
                 .select('role')

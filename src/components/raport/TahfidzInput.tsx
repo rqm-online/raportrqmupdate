@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import type { SurahMaster, TahfidzProgress } from '../../types';
@@ -463,3 +463,4 @@ export function getTahfidzProgressData(progressData: Record<string, { kb: number
         kh: scores.kh
     }));
 }
+

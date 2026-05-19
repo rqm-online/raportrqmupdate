@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './hooks/useAuth';
 import Layout from './components/layout/Layout';
@@ -50,7 +50,7 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Navigate to="/" replace />} />
             <Route path="/print/blank" element={<RaportPrintBlank />} />
             <Route path="/print/:id" element={<RaportPrint />} />
             <Route element={<Layout />}>

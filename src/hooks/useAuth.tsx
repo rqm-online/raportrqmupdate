@@ -1,6 +1,5 @@
 import { useEffect, useState, createContext, useContext } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
 
 interface AuthContextType {
     session: Session | null;
@@ -9,39 +8,40 @@ interface AuthContextType {
     signOut: () => Promise<void>;
 }
 
+// Fake admin session for bypass mode
+const FAKE_ADMIN_USER = {
+    id: 'bypass-admin-local',
+    email: 'admin@rqm.com',
+    role: 'admin',
+    aud: 'authenticated',
+    app_metadata: {},
+    user_metadata: { full_name: 'Admin RQM' },
+    created_at: new Date().toISOString(),
+} as unknown as User;
+
+const FAKE_ADMIN_SESSION = {
+    access_token: 'bypass-token',
+    refresh_token: 'bypass-refresh',
+    expires_in: 999999,
+    token_type: 'bearer',
+    user: FAKE_ADMIN_USER,
+} as unknown as Session;
+
 const AuthContext = createContext<AuthContextType>({
-    session: null,
-    user: null,
-    loading: true,
+    session: FAKE_ADMIN_SESSION,
+    user: FAKE_ADMIN_USER,
+    loading: false,
     signOut: async () => { },
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [session, setSession] = useState<Session | null>(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-            setLoading(false);
-        });
-
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
-            setLoading(false);
-        });
-
-        return () => subscription.unsubscribe();
-    }, []);
-
-    const signOut = async () => {
-        await supabase.auth.signOut();
-    };
-
     return (
-        <AuthContext.Provider value={{ session, user: session?.user ?? null, loading, signOut }}>
+        <AuthContext.Provider value={{ 
+            session: FAKE_ADMIN_SESSION, 
+            user: FAKE_ADMIN_USER, 
+            loading: false, 
+            signOut: async () => { window.location.reload(); } 
+        }}>
             {children}
         </AuthContext.Provider>
     );

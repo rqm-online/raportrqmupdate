@@ -1,4 +1,4 @@
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+﻿import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
@@ -16,6 +16,10 @@ export default function Layout() {
         queryKey: ['user_role', session?.user?.id],
         enabled: !!session?.user?.id,
         queryFn: async () => {
+            // Bypass mode: return admin role directly
+            if (session?.user?.id === 'bypass-admin-local') {
+                return 'admin' as const;
+            }
             const { data } = await supabase
                 .from('users')
                 .select('role')
@@ -126,3 +130,4 @@ export default function Layout() {
         </div>
     );
 }
+

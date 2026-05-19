@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import type { TahsinMaster, Halaqah } from '../../types';
@@ -531,3 +531,4 @@ export default function TahsinManagement() {
         </div>
     );
 }
+
