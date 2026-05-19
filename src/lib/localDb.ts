@@ -218,7 +218,6 @@ function applySelect(rows: any[], columns: string, currentTable: string): any[] 
 // ---- QUERY BUILDER ----
 class QueryBuilder {
   private _table: string;
-  private __data: any[] | null = null;
   private _isSingle = false;
   private _error: any = null;
   private _columns = '*';
@@ -442,11 +441,10 @@ class DeleteBuilder {
 
 class MutationBuilder {
   private _table: string;
-  private __op: string;
   private _records: any[];
 
   constructor(table: string, op: string, records: any[]) {
-    this._table = table; this.__op = op; this._records = records;
+    this._table = table; this._records = records;
   }
 
   select() { return this; }
