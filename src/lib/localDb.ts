@@ -332,7 +332,7 @@ class QueryBuilder {
 
   // insert - returns MutationBuilder to support .select().single() chaining
   insert(records: any[]): MutationBuilder {
-    return new MutationBuilder(this._table, 'insert', records);
+    return new MutationBuilder(this._table, records);
   }
 
   // update
@@ -443,7 +443,7 @@ class MutationBuilder {
   private _table: string;
   private _records: any[];
 
-  constructor(table: string, op: string, records: any[]) {
+  constructor(table: string, records: any[]) {
     this._table = table; this._records = records;
   }
 
