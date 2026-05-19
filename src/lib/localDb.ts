@@ -130,7 +130,8 @@ function initSeedData() {
 initSeedData();
 
 // ---- RELATION RESOLVER ----
-type TableName = keyof typeof KEYS | 'view_leger_nilai';
+// @ts-ignore - TableName used for documentation
+type _TableName = keyof typeof KEYS | 'view_leger_nilai';
 const TABLE_MAP: Record<string, string> = {
   'halaqah': KEYS.halaqah,
   'surah_master': KEYS.surah_master,
@@ -217,7 +218,7 @@ function applySelect(rows: any[], columns: string, currentTable: string): any[] 
 // ---- QUERY BUILDER ----
 class QueryBuilder {
   private _table: string;
-  private _data: any[] | null = null;
+  private __data: any[] | null = null;
   private _isSingle = false;
   private _error: any = null;
   private _columns = '*';
@@ -441,11 +442,11 @@ class DeleteBuilder {
 
 class MutationBuilder {
   private _table: string;
-  private _op: string;
+  private __op: string;
   private _records: any[];
 
   constructor(table: string, op: string, records: any[]) {
-    this._table = table; this._op = op; this._records = records;
+    this._table = table; this.__op = op; this._records = records;
   }
 
   select() { return this; }

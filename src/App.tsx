@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './hooks/useAuth';
 import Layout from './components/layout/Layout';
-import Login from './pages/auth/Login';
 import Settings from './pages/settings/Settings';
 import Students from './pages/master/Students';
 import Academic from './pages/master/Academic';
